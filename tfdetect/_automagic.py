@@ -14,16 +14,6 @@ log = logging.getLogger(__name__)
 _pip_bin = os.path.join(sys.prefix, 'bin', 'pip')
 
 
-def _openone(flist, *args):
-    for p in flist:
-        try:
-            f = open(p, *args)
-            return (p, f)
-        except IOError:
-            pass
-    return None, None
-
-
 class PipInstallError(Exception):
     pass
 
@@ -63,49 +53,47 @@ def _iter_installed_cudas():
 __version__ = '1.4.1'
 
 
+def detect_tensorflow_package(version=__version__):
+    log.warning('Tensorflow is required but not installed.')
+    log.warning(
+        'Detecting whether we should use tensorflow gpu or cpu variant.'
+    )
+
+    found_cudas = list(_iter_installed_cudas())
+
+    log.info(
+        'Detected CUDA installations via pkg-config: %r',
+        found_cudas,
+    )
+
+    suffix = found_cudas and '-gpu' or ''
+    name = 'tensorflow%s==%s' % (suffix, __version__)
+
+    return name
+
+
 class ImportPipInstaller(object):
     def __init__(self):
         self.realimport = __import__
-        self.ignore = set()
 
     def __call__(self, name, *args, **kwargs):
         try:
             return self.realimport(name, *args, **kwargs)
-        except ImportError:
-            pass
+        except ImportError as exc:
+            if name == 'tensorflow':
+                pip_install_name = detect_tensorflow_package()
+                log.warn('Installing tensorflow as detected: %r', name)
 
-        if name == 'tensorflow':
-            log.warning('Tensorflow is required but not installed.')
-            log.warning('Detecting whether we should use tensorflow gpu or cpu variant.')
+                try:
+                    _pip_install(pip_install_name)
+                except PipInstallError:
+                    raise exc
 
-            found_cudas = list(_iter_installed_cudas())
+                _rescan_path()
 
-            log.info(
-                'Detected CUDA installations via pkg-config: %r', found_cudas
-            )
+                return self.realimport(name, *args, **kwargs)
 
-            suffix = found_cudas and '-gpu' or ''
-            name = 'tensorflow%s==%s' % (suffix, __version__)
-
-            log.warn('Installing tensorflow as detected: %r', name)
-
-        else:
-            raise ImportError(name)
-
-        if name in self.ignore:
-            raise ImportError(name)
-
-        print("Will install module {}".format(name))
-
-        try:
-            _pip_install(name)
-        except PipInstallError:
-            self.ignore.add(name)
-            raise ImportError(name)
-
-        _rescan_path()
-
-        return self.realimport(name, *args, **kwargs)
+            raise exc
 
 
 def install():
