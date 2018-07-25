@@ -52,7 +52,7 @@ def detect_tensorflow_package(version=tf_version):
         )
 
     suffix = found_cudas and '-gpu' or ''
-    name = 'tensorflow%s==%s' % (suffix, __version__)
+    name = 'tensorflow%s==%s' % (suffix, version)
 
     return name
 
@@ -70,7 +70,7 @@ conf = dict(
     packages=find_packages(),
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
-    setup_requires=['setuptools>=17.1', 'pkgconfig'],
+    setup_requires=['setuptools>=17.1'],
     install_requires=[tf_pip_install_name],
     keywords=['tensorflow', 'wtf'],
     classifier=[
