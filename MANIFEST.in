@@ -1,2 +1,3 @@
 include versioneer.py
+include pkgconfig.py
 include tfdetect/_version.py
