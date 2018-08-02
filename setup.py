@@ -1,26 +1,27 @@
 #!/usr/bin/env python
 
-import atexit
 import logging
-import os.path
-import site
-import subprocess
-import sys
 
-import pkg_resources
-import versioneer
-from setuptools import setup, find_packages
-
-try:
-    import __builtin__
-except ImportError:
-    import builtins as __builtin__
+from setuptools import find_packages, setup
 
 log = logging.getLogger(__name__)
 
-__version__ = versioneer.get_version()
 
-tf_version = __version__.rsplit('+', 1)[0]
+def get_version(fn='VERSION'):
+    with open(fn, 'r') as fh:
+        version = fh.read()
+    return version
+
+
+def get_tf_version(version=get_version):
+    if callable(version):
+        version = version()
+
+    tf_version = version.rsplit('+', 1)[0]
+    return tf_version
+
+
+tf_version = get_tf_version()
 
 
 def _iter_installed_cudas():
@@ -71,8 +72,7 @@ conf = dict(
     author_email='github@skywww.net',
     license='GPL',
     packages=find_packages(),
-    version=versioneer.get_version(),
-    cmdclass=versioneer.get_cmdclass(),
+    version=get_version(),
     setup_requires=['setuptools>=17.1'],
     install_requires=[tf_pip_install_name],
     keywords=['tensorflow', 'wtf'],
