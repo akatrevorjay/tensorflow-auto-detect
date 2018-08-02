@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 def get_version(fn='VERSION'):
     with open(fn, 'r') as fh:
-        version = fh.read()
+        version = fh.readlines()[0].rstrip('\n')
     return version
 
 
