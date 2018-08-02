@@ -26,6 +26,9 @@ tf_version = __version__.rsplit('+', 1)[0]
 def _iter_installed_cudas():
     import pkgconfig
 
+    # I think it's best to fail hard here when pkg-config is not available,
+    # otherwise the user may get an unexpected version, hence no try/except here.
+
     for x in pkgconfig.list_all():
         if not x.startswith('cuda-'):
             continue
