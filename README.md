@@ -1,4 +1,4 @@
-# tensoflow-detect
+# tensorflow-detect
 
 Solves the absolute mess that is installing `tensorflow` from your package requirements.
 
