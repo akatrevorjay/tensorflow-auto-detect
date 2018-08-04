@@ -65,7 +65,8 @@ tf_pip_install_name = detect_tensorflow_package()
 log.warn('Installing tensorflow as detected: %r', tf_pip_install_name)
 
 conf = dict(
-    name='tensorflow-detect',
+    # name='tensorflow-detect',
+    name='tf-detect',
     summary=
     'Automatically install CPU or GPU tensorflow determined by looking for a CUDA installation.',
     author='Trevor Joynson',
