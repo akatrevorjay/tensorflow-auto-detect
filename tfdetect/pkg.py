@@ -3,6 +3,7 @@ import logging
 import os
 import re
 import subprocess
+import itertools
 
 from setuptools import find_packages, setup
 
@@ -65,20 +66,27 @@ def _search_for_installed_lib(
 ):
     log.info('Searching for library %r==%r', library_name, library_version)
 
-    for lib in libs:
-        base = lib['basename']
+    def _search(name):
+        for lib in libs:
+            base = lib['basename']
 
-        found = []
+            if not base.startswith(name):
+                continue
 
-        found.append(base.startswith(library_name))
+            if library_version and not base.endswith('.%s' % library_version):
+                log.debug('[name=%s] library_version=%r library_name=%r not endswith version base=%r', name, library_version,
+                          library_name, base)
+                continue
 
-        if library_version is not None:
-            found.append(base.endswith('.%s' % library_version))
-
-        found = all(found)
-
-        if found:
             yield lib
+
+    names = [library_name, 'lib%s' % library_name]
+    names = ['%s.so' % n for n in names]
+
+    if library_version:
+        names = ['%s.%s' % (n, library_version) for n in names]
+
+    return itertools.chain(*[_search(n) for n in names])
 
 
 def _get_cuda_libs_for_tf_version(tf_version):
@@ -87,13 +95,13 @@ def _get_cuda_libs_for_tf_version(tf_version):
             return libs
 
 
-def _has_libs(libs):
-    log.info('Looking for libraries %r', libs)
+def _has_libs(check_for_libs, libs=_LIBS):
+    log.info('Looking for libraries %r', check_for_libs)
 
     ret = True
 
-    for lib_name, lib_version in libs.items():
-        found = list(_search_for_installed_lib(lib_name, lib_version))
+    for lib_name, lib_version in check_for_libs.items():
+        found = list(_search_for_installed_lib(lib_name, lib_version, libs=_LIBS))
         log.info(
             'Found library %r: %r', '%s==%s' % (lib_name, lib_version), found
         )
