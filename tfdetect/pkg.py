@@ -1,32 +1,24 @@
 #!/usr/bin/env python
-import os
 import logging
-import subprocess
+import os
 import re
+import subprocess
+
+from setuptools import find_packages, setup
 
 from tfdetect import utils
-from setuptools import find_packages, setup
+from tfdetect.cuda import CUDA_LIBS, CURA_LIBS_MAP
 
 log = logging.getLogger(__name__)
 
 TRUTHY_STRINGS = ['true', 'True', 't', '1']
 
+FORCE_GPU_ENV = 'TENSORFLOW_FORCE_GPU'
+
 LDCONFIG_P_EXEC = ['ldconfig', '-Np']
 LDCONFIG_P_RE = re.compile(
     r'^\t(?P<basename>[^\s]+) \((?P<archs>[^\)]+)\) => (?P<path>[^\s]+)$'
 )
-
-cuda_libs = {
-    '9.0':
-        dict(cublas='9.0', cudnn='7', cufft='9.0', curand='9.0', cudart='9.0'),
-}
-
-cuda_version_map = {
-    '1.7': cuda_libs['9.0'],
-    '1.8': cuda_libs['9.0'],
-    '1.9': cuda_libs['9.0'],
-    '1.10': cuda_libs['9.0'],
-}
 
 
 def get_version(fn='VERSION'):
@@ -41,21 +33,6 @@ def get_tf_version(version=get_version):
 
     tf_version = version.rsplit('+', 1)[0]
     return tf_version
-
-
-def _iter_pkgconfig_cudas():
-    import pkgconfig
-
-    try:
-        pkgs = pkgconfig.list_all()
-    except Exception as exc:
-        return
-
-    for x in pkgs:
-        if not x.startswith('cuda-'):
-            continue
-
-        yield x
 
 
 def _iter_installed_libs(cmd=LDCONFIG_P_EXEC, cmd_line_re=LDCONFIG_P_RE):
@@ -78,17 +55,17 @@ def _iter_installed_libs(cmd=LDCONFIG_P_EXEC, cmd_line_re=LDCONFIG_P_RE):
         yield m.groupdict()
 
 
+_LIBS = list(_iter_installed_libs())
+
+
 def _search_for_installed_lib(
         library_name,
         library_version=None,
-        cmd=LDCONFIG_P_EXEC,
-        cmd_line_re=LDCONFIG_P_RE.match,
+        libs=_LIBS,
 ):
     log.info('Searching for library %r==%r', library_name, library_version)
 
-    g = _iter_installed_libs(cmd=cmd, cmd_line_re=cmd_line_re)
-
-    for lib in g:
+    for lib in libs:
         base = lib['basename']
 
         found = []
@@ -105,7 +82,7 @@ def _search_for_installed_lib(
 
 
 def _get_cuda_libs_for_tf_version(tf_version):
-    for prefix, libs in cuda_version_map.items():
+    for prefix, libs in CURA_LIBS_MAP.items():
         if tf_version.startswith(prefix):
             return libs
 
@@ -113,12 +90,20 @@ def _get_cuda_libs_for_tf_version(tf_version):
 def _has_libs(libs):
     log.info('Looking for libraries %r', libs)
 
-    for lib_name, lib_version in libs.items():
-        found = _search_for_installed_lib(lib_name, lib_version)
-        if not found:
-            return False
+    ret = True
 
-    return True
+    for lib_name, lib_version in libs.items():
+        found = list(_search_for_installed_lib(lib_name, lib_version))
+        log.info(
+            'Found library %r: %r', '%s==%s' % (lib_name, lib_version), found
+        )
+        if not found:
+            log.warning(
+                'Could not find library %r', '%s==%s' % (lib_name, lib_version)
+            )
+            ret = False
+
+    return ret
 
 
 def detect_tensorflow_package(tf_version=get_tf_version):
@@ -129,34 +114,33 @@ def detect_tensorflow_package(tf_version=get_tf_version):
         'Detecting whether we should require tensorflow gpu or cpu variant.'
     )
 
-    use_gpu = []
+    use_gpu = {}
 
-    force_gpu = os.environ.get('TENSORFLOW_FORCE_GPU')
+    force_gpu = os.environ.get(FORCE_GPU_ENV)
     force_gpu = force_gpu in TRUTHY_STRINGS
-    use_gpu.append(force_gpu)
-
-    pkgconfig_cudas = list(_iter_pkgconfig_cudas())
-    use_gpu.append(pkgconfig_cudas)
+    use_gpu.update(force_gpu=force_gpu)
 
     libs = _get_cuda_libs_for_tf_version(tf_version)
-    print(libs)
+    log.info('CUDA libs for tf_version=%s' % tf_version)
+
+    has_libs = False
     if libs:
         has_libs = _has_libs(libs)
-        print(has_libs)
+    use_gpu.update(has_libs=has_libs)
 
-    use_gpu = any(use_gpu)
+    do_use_gpu = any(use_gpu.values())
+    log.info('Tensorflow detection results: use_gpu=%r do_use_gpu=%r', use_gpu, do_use_gpu)
 
-    if use_gpu:
+    if do_use_gpu:
         log.warning(
             'Detected CUDA installation; requiring GPU tensorflow variant.',
-            pkgconfig_cudas,
         )
     else:
         log.warning(
-            'Did NOT detect CUDA installation via pkg-config; requiring CPU tensorflow variant.',
+            'Did NOT detect CUDA installation; requiring CPU tensorflow variant.',
         )
 
-    suffix = use_gpu and '-gpu' or ''
+    suffix = do_use_gpu and '-gpu' or ''
     name = 'tensorflow%s==%s' % (suffix, tf_version)
 
     return name
