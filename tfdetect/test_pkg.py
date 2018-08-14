@@ -88,7 +88,7 @@ def test__search_for_installed_lib(m_check_output):
     assert libs == RAW_LDCONFIG_P_LINES_EXP
 
     for exp, meta in zip(RAW_LDCONFIG_P_LINES_EXP, LDCONFIG_LIBS):
-        res = list(pkg._search_for_installed_lib(libs=libs, **meta))
+        res = list(pkg._search_for_installed_lib(libs, **meta))
         log.debug('res=%r', res)
         assert exp in res
 
