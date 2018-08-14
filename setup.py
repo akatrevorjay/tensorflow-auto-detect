@@ -22,7 +22,7 @@ conf = dict(
     'Automatically install CPU or GPU tensorflow determined by looking for a CUDA installation.',
     author='Trevor Joynson',
     author_email='github@skywww.net',
-    description=readme,
+    long_description=readme,
     license='GPL',
     packages=find_packages(),
     version=get_version(),
