@@ -37,7 +37,12 @@ def get_tf_version(version=get_version):
 
 
 def _iter_installed_libs(cmd=LDCONFIG_P_EXEC, cmd_line_re=LDCONFIG_P_RE):
-    raw = subprocess.check_output(cmd)
+    try:
+        raw = subprocess.check_output(cmd)
+    except Exception as exc:
+        log.warning('Could not execute %r: %r' % (cmd, exc))
+        return
+
     lines = raw.splitlines()
 
     for line in lines[1:]:
@@ -56,13 +61,10 @@ def _iter_installed_libs(cmd=LDCONFIG_P_EXEC, cmd_line_re=LDCONFIG_P_RE):
         yield m.groupdict()
 
 
-_LIBS = list(_iter_installed_libs())
-
-
 def _search_for_installed_lib(
+        libs,
         library_name,
         library_version=None,
-        libs=_LIBS,
 ):
     log.info('Searching for library %r==%r', library_name, library_version)
 
@@ -95,13 +97,13 @@ def _get_cuda_libs_for_tf_version(tf_version):
             return libs
 
 
-def _has_libs(check_for_libs, libs=_LIBS):
+def _has_libs(libs, check_for_libs):
     log.info('Looking for libraries %r', check_for_libs)
 
     ret = True
 
     for lib_name, lib_version in check_for_libs.items():
-        found = list(_search_for_installed_lib(lib_name, lib_version, libs=_LIBS))
+        found = list(_search_for_installed_lib(libs, lib_name, lib_version))
         log.info(
             'Found library %r: %r', '%s==%s' % (lib_name, lib_version), found
         )
@@ -128,12 +130,14 @@ def detect_tensorflow_package(tf_version=get_tf_version):
     force_gpu = force_gpu in TRUTHY_STRINGS
     use_gpu.update(force_gpu=force_gpu)
 
-    libs = _get_cuda_libs_for_tf_version(tf_version)
+    needed_libs = _get_cuda_libs_for_tf_version(tf_version)
     log.info('CUDA libs for tf_version=%s' % tf_version)
 
+    libs = list(_iter_installed_libs())
+
     has_libs = False
-    if libs:
-        has_libs = _has_libs(libs)
+    if needed_libs:
+        has_libs = _has_libs(libs, needed_libs)
     use_gpu.update(has_libs=has_libs)
 
     do_use_gpu = any(use_gpu.values())
