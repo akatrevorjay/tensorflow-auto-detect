@@ -12,12 +12,17 @@ _tf_pip_name = detect_tensorflow_package()
 log.warn('Installing tensorflow as detected: %r', _tf_pip_name)
 
 
+with open('README.md', 'r') as fh:
+    readme = fh.read()
+
+
 conf = dict(
     name='tensorflow-detect-cpugpu',
     summary=
     'Automatically install CPU or GPU tensorflow determined by looking for a CUDA installation.',
     author='Trevor Joynson',
     author_email='github@skywww.net',
+    description=readme,
     license='GPL',
     packages=find_packages(),
     version=get_version(),

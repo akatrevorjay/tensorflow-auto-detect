@@ -1,2 +1,3 @@
 include pkgconfig.py
 include VERSION
+include README.md
