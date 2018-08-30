@@ -17,7 +17,7 @@ with open('README.md', 'r') as fh:
 
 
 conf = dict(
-    name='tensorflow-auto-detect-cpugpu',
+    name='tensorflow-detect',
     summary=
     'Automatically install CPU or GPU tensorflow determined by looking for a CUDA installation.',
     author='Trevor Joynson',
