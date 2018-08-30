@@ -25,7 +25,6 @@ conf = dict(
     packages=find_packages(),
     version=get_version(),
     setup_requires=['setuptools>=17.1'],
-    tests_require=['pytest', 'mock', 'coverage', 'coveralls', 'tox'],
     install_requires=[_tf_pip_name],
     keywords=['tensorflow', 'wtf'],
     classifier=[
