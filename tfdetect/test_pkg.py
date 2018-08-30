@@ -97,9 +97,12 @@ def test_detect_tensorflow_package():
     exp_cpu = 'tensorflow'
     exp_gpu = '%s-gpu' % exp_cpu
 
-    res = pkg.detect_tensorflow_package()
-    res = res.rsplit('==', 1)[0]
-    assert res == exp_cpu
+    with mock.patch.object(pkg, '_get_cuda_libs_for_tf_version',
+                           return_value=[]):
+        with mock.patch.object(pkg, '_has_libs', return_value=False):
+            res = pkg.detect_tensorflow_package()
+            res = res.rsplit('==', 1)[0]
+            assert res == exp_cpu
 
     with mock.patch.object(pkg, '_get_cuda_libs_for_tf_version',
                            return_value=['fakelibfortruth']):

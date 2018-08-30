@@ -3,18 +3,16 @@
 import logging
 
 from setuptools import find_packages, setup
+
 from tfdetect.pkg import detect_tensorflow_package, get_version
 
 log = logging.getLogger(__name__)
 
-
 _tf_pip_name = detect_tensorflow_package()
 log.warn('Installing tensorflow as detected: %r', _tf_pip_name)
 
-
-with open('README.md', 'r') as fh:
+with open('README.rst', 'r') as fh:
     readme = fh.read()
-
 
 conf = dict(
     name='tensorflow-detect',
@@ -41,7 +39,6 @@ conf = dict(
         'Topic :: Software Development :: Libraries',
     ],
 )
-
 
 if __name__ == '__main__':
     setup(**conf)
