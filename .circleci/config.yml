@@ -39,7 +39,7 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "setup.py" }}
-        
+
       # run tests!
       # this example uses Django's built-in test-runner
       # other common Python testing frameworks include pytest and nose
