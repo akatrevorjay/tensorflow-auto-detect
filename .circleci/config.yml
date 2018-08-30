@@ -50,10 +50,11 @@ jobs:
           command: |
             . venv/bin/activate
 
-            mkdir -pv test-reports
+            # mkdir -pv test-reports
+            # pytest -v --junit-xml test-reports/pytest.xml
 
-            pytest -v --junit-xml test-reports/pytest.xml
+            tox
 
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
+      # - store_artifacts:
+      #     path: test-reports
+      #     destination: test-reports
