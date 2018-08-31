@@ -66,5 +66,5 @@ jobs:
           command: |
             . venv/bin/activate
 
-            coveralls
+            [[ -z "$COVERALLS_REPO_TOKEN" ]] || coveralls
 
