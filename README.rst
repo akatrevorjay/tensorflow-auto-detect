@@ -35,9 +35,10 @@ Let's be honest, your stringently detailed absoute step-by-step microbe resistan
 
 **Q:** How do you add the proper one to your own package as a requirement when they both install to the same package namespace?
 
-**A:** Well, **you can't**, son. 🕶  *Oh, and by the way, if you install one after the other, say to fix if you installed
-the wrong one at first (it's okay it's unintuitive), I'll just blindly trample over the first's files instead of doing
-anything useful. (yada yada setuptools yada)*
+**A:** Well, you can't. 🕶
+
+Oh, and by the way, if you install one after the other, say to fix if you installed the wrong one at first,
+I'll just blindly trample over the first's files instead of doing anything useful. (Note: this is not Tensorflow's fault here)
 
 You can try to choke it down with sweet hacks like:
 
