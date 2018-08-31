@@ -72,7 +72,7 @@ As `pip` argument:
 
 ..code:: sh
 
-    pip install tensorflow-auto-detect-cpucpu==1.8.1  # or any other release, 1to1 mapping to tf releases
+    pip install tensorflow-auto-detect==1.8.1  # or any other release, 1to1 mapping to tf releases
 
 
 Running tests
