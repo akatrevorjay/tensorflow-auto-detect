@@ -33,7 +33,7 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
 
-            pip install -e .[tests]
+            pip install -U -e .[tests]
 
       - save_cache:
           paths:
