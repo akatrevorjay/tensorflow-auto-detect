@@ -38,7 +38,7 @@ Let's be honest, your stringently detailed absoute step-by-step microbe resistan
 **A:** Well, you can't. 🕶
 
 Oh, and by the way, if you install one after the other, say to fix if you installed the wrong one at first,
-I'll just blindly trample over the first's files instead of doing anything useful. (Note: this is not Tensorflow's fault here)
+I'll just blindly trample over the first's files instead of doing anything useful. (Note: this is not Tensorflow's fault here, but a more widespread problem in pyland)
 
 You can try to choke it down with sweet hacks like:
 
@@ -57,10 +57,8 @@ Currently, only the check for the cuda runtime library is active (by design) to 
 "strange" setups, even though I've yet to come across one. This is the finest heuristic for this anyway, so it works out
 nicely, even in the face of your sweet sweet custom compiles; not to mention ensuring optional dependencies stay that way.
 
-*For versions below `1.7`* `pkg-config` was interrogated, which while that works, it required development headers.
-The current method outlined above does not require headers to be available, and works in all sane configurations of
-your systems including minimal containers, as long as you have the cuda runtime on your system.
-
+Versions beneath `1.7` have not been tested, so the CUDA versions are likely to be mismatched.  Was too far in the past
+to care, I'm sorry.
 
 Usage
 -----
