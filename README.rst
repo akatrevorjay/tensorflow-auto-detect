@@ -24,12 +24,14 @@ Let's say you're making a product or have a project:
 
 - It will run on a myriad of classes of machines, and therefore needs to be able to operate and install on machines that may or may not have CUDA available.
 
+- You want to optimistically utilize a GPU if you can, but fallback to using just CPU.
+
 - You want your package to be easily installable. Every time. Not just for half of your userbase.
 
 - You don't want to have toss the problem on your users and fellow engineers.
 
 Let's be honest, your stringently detailed absoute step-by-step microbe resistant instructions could.. *maybe..*
-*possibly..* not be followed and/or remembered exactly to a tee. You know, like everything else.
+*possibly..* not be followed and/or remembered exactly to a tee. You know, like everything else. Tech is hard.
 
 **Q:** How do you add the proper one to your own package as a requirement when they both install to the same package namespace?
 
