@@ -70,7 +70,7 @@ In `requirements.txt` or `install_requires`:
 
 As `pip` argument:
 
-..code:: sh
+.. code:: sh
 
     pip install tensorflow-auto-detect==1.8.1  # or any other release, 1to1 mapping to tf releases
 
