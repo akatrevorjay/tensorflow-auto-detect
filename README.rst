@@ -1,4 +1,4 @@
-tensorflow-auto-detect-cpugpu
+tensorflow-auto-detect
 =============================
 
 Solves the absolute mess that is installing `tensorflow` from your package requirements.
@@ -8,7 +8,7 @@ available; otherwise it will fallback to the CPU version.
 
 |ci-badge| |coverage-badge|
 
-- PyPi: https://pypi.python.org/pypi/tensorflow-auto-detect-cpugpu
+- PyPi: https://pypi.python.org/pypi/tensorflow-auto-detect
 - Docs: All you need is right on this page.
 
 
@@ -66,7 +66,7 @@ In `requirements.txt` or `install_requires`:
 
 .. code:: sh
 
-    tensorflow-auto-detect-cpugpu==1.10.0  # or any other release, 1to1 mapping to tf releases
+    tensorflow-auto-detect==1.10.0  # or any other release, 1to1 mapping to tf releases
 
 As `pip` argument:
 
@@ -84,8 +84,8 @@ Running tests
     pytest
 
 
-.. |ci-badge| image:: https://circleci.com/gh/akatrevorjay/tensorflow-auto-detect-cpugpu.svg?style=svg
-   :target: https://circleci.com/gh/akatrevorjay/tensorflow-auto-detect-cpugpu
-.. |coverage-badge| image:: https://coveralls.io/repos/akatrevorjay/tensorflow-auto-detect-cpugpu/badge.svg?branch=develop&service=github
-   :target: https://coveralls.io/github/akatrevorjay/tensorflow-auto-detect-cpugpu?branch=develop
+.. |ci-badge| image:: https://circleci.com/gh/akatrevorjay/tensorflow-auto-detect.svg?style=svg
+   :target: https://circleci.com/gh/akatrevorjay/tensorflow-auto-detect
+.. |coverage-badge| image:: https://coveralls.io/repos/akatrevorjay/tensorflow-auto-detect/badge.svg?branch=develop&service=github
+   :target: https://coveralls.io/github/akatrevorjay/tensorflow-auto-detect?branch=develop
 
