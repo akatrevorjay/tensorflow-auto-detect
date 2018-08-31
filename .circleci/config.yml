@@ -63,6 +63,6 @@ jobs:
             - ./.tox
           key: v1-tox-{{ checksum "setup.py" }}
 
-      - store_artifacts:
+      - store_test_results:
           path: test-reports
-          destination: test-reports
+
