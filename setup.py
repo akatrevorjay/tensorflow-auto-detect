@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 import logging
+import setuptools
 
-from setuptools import find_packages, setup
-
-from tfdetect.pkg import detect_tensorflow_package, get_version
+import packaging_utils
+from tfdetect import pkg
 
 log = logging.getLogger(__name__)
 
-_tf_pip_name = detect_tensorflow_package()
+_tf_pip_name = pkg.detect_tensorflow_package()
 log.warn('Installing tensorflow as detected: %r', _tf_pip_name)
 
 with open('README.rst', 'r') as fh:
@@ -22,9 +22,8 @@ conf = dict(
     author_email='github@skywww.net',
     long_description=readme,
     license='GPL',
-    packages=find_packages(),
-    version=get_version(),
-    setup_requires=['setuptools>=17.1'],
+    packages=setuptools.find_packages(),
+    version=pkg.get_version(),
     install_requires=[_tf_pip_name],
     keywords=['tensorflow', 'wtf'],
     classifier=[
@@ -39,5 +38,7 @@ conf = dict(
     ],
 )
 
+conf = packaging_utils.setup_requirements()
+
 if __name__ == '__main__':
-    setup(**conf)
+    setuptools.setup(**conf)

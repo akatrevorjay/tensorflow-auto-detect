@@ -1,2 +1,4 @@
 include VERSION
 include README.rst
+include packaging_utils.py
+include-dir requirements
