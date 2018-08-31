@@ -33,12 +33,18 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
 
-            pip install -U -e .[tests]
+            pip install -U tox
 
       - save_cache:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "setup.py" }}
+
+      - restore_cache:
+          keys:
+          - v1-tox-{{ checksum "setup.py" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-tox-
 
       # run tests!
       # this example uses Django's built-in test-runner
@@ -51,6 +57,11 @@ jobs:
             . venv/bin/activate
 
             tox
+
+      - save_cache:
+          paths:
+            - ./.tox
+          key: v1-tox-{{ checksum "setup.py" }}
 
       - store_artifacts:
           path: test-reports
