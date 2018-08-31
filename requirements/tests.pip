@@ -1,4 +1,6 @@
-tox
-pytest
+coverage
+coveralls
 mock
-
+pytest
+pytest-cov
+tox
