@@ -1,0 +1,8 @@
+[run]
+omit =
+    */tests/*
+    */test_*.py
+
+    versioneer.py
+    _version.py
+    setup.py

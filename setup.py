@@ -14,7 +14,7 @@ log.warn('Installing tensorflow as detected: %r', _tf_pip_name)
 with open('README.rst', 'r') as fh:
     readme = fh.read()
 
-conf = dict(
+_conf = dict(
     name='tensorflow-auto-detect',
     summary=
     'Automatically install CPU or GPU tensorflow determined by looking for a CUDA installation.',
@@ -38,7 +38,7 @@ conf = dict(
     ],
 )
 
-conf = packaging_utils.setup_requirements()
+_conf.update(packaging_utils.setup_requirements())
 
 if __name__ == '__main__':
-    setuptools.setup(**conf)
+    setuptools.setup(**_conf)

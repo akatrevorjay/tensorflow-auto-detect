@@ -51,10 +51,17 @@ jobs:
           command: |
             . venv/bin/activate
 
-            tox
+            ./bin/run-tests --ci
 
       - store_test_results:
-          path: test-reports
+          path: reports/junit
+
+      - run:
+          name: run-tox
+          command: |
+            . venv/bin/activate
+
+            ./bin/run-tox
 
       - save_cache:
           paths:
