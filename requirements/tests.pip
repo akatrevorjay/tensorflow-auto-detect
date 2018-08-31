@@ -2,3 +2,5 @@ tox
 pytest
 mock
 
+# damnit tox are you crazed
+setuptools>=30
