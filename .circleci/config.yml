@@ -33,18 +33,18 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
 
-            pip install -U tox coveralls
+            ##
+            ## tox requires newer setuptools than tensorflow explicitly requires.
+            ## what the fuck dude, why would you hard pin that, fuck
+            ##
+
+            # pip install -e .[tests]
+            pip install -r requirements/tests.pip
 
       - save_cache:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "setup.py" }}
-
-      - restore_cache:
-          keys:
-          - v1-tox-{{ checksum "setup.py" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-tox-
 
       - run:
           name: run-tests
@@ -55,6 +55,12 @@ jobs:
 
       - store_test_results:
           path: reports/junit
+
+      - restore_cache:
+          keys:
+          - v1-tox-{{ checksum "setup.py" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-tox-
 
       - run:
           name: run-tox
