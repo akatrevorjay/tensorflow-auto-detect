@@ -45,7 +45,7 @@ def setup_requirements(
     ...     include_package_data=True,
     ... )
     >>> _conf.update(setup_requirements())
-    >>> setuptools.setup(**_conf)
+    >>> # setuptools.setup(**_conf)
 
     :param str pattern: Glob pattern to find requirements files
     :param bool combine: Set True to set install_requires to extras_require['all']
