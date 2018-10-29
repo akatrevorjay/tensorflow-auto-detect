@@ -16,7 +16,7 @@ with open('README.rst', 'r') as fh:
 
 _conf = dict(
     name='tensorflow-auto-detect',
-    summary=
+    description=
     'Automatically install CPU or GPU tensorflow determined by looking for a CUDA installation.',
     author='Trevor Joynson',
     author_email='github@skywww.net',
@@ -26,7 +26,7 @@ _conf = dict(
     version=pkg.get_version(),
     install_requires=[_tf_pip_name],
     keywords=['tensorflow', 'wtf'],
-    classifier=[
+    classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Intended Audience :: Information Technology',
