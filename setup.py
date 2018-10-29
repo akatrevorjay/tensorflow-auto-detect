@@ -14,6 +14,7 @@ log.warn('Installing tensorflow as detected: %r', _tf_pip_name)
 with open('README.rst', 'r') as fh:
     readme = fh.read()
 
+
 _conf = dict(
     name='tensorflow-auto-detect',
     description=
@@ -24,7 +25,6 @@ _conf = dict(
     license='GPL',
     packages=setuptools.find_packages(),
     version=pkg.get_version(),
-    install_requires=[_tf_pip_name],
     keywords=['tensorflow', 'wtf'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -38,7 +38,12 @@ _conf = dict(
     ],
 )
 
-_conf.update(packaging_utils.setup_requirements())
+_conf.update(packaging_utils.setup_requirements(combine=False))
+
+_conf.update(
+    install_requires=[_tf_pip_name],
+)
+
 
 if __name__ == '__main__':
     setuptools.setup(**_conf)
