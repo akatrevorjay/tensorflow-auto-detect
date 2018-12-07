@@ -9,5 +9,6 @@ CURA_LIBS_MAP = {
     '1.8': CUDA_LIBS['9.0'],
     '1.9': CUDA_LIBS['9.0'],
     '1.10': CUDA_LIBS['9.0'],
+    '1.11': CUDA_LIBS['9.0'],
 }
 
